@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediLab Pro - Advanced Diagnostic Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    borderRadius: {
+                        lg: "var(--radius)",
+                        md: "calc(var(--radius) - 2px)",
+                        sm: "calc(var(--radius) - 4px)",
+                    },
+                    colors: {
+                        background: "var(--background)",
+                        foreground: "var(--foreground)",
+                        card: {
+                            DEFAULT: "var(--card)",
+                            foreground: "var(--card-foreground)",
+                        },
+                        popover: {
+                            DEFAULT: "var(--popover)",
+                            foreground: "var(--popover-foreground)",
+                        },
+                        primary: {
+                            DEFAULT: "var(--primary)",
+                            foreground: "var(--primary-foreground)",
+                        },
+                        secondary: {
+                            DEFAULT: "var(--secondary)",
+                            foreground: "var(--secondary-foreground)",
+                        },
+                        muted: {
+                            DEFAULT: "var(--muted)",
+                            foreground: "var(--muted-foreground)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent)",
+                            foreground: "var(--accent-foreground)",
+                        },
+                        destructive: {
+                            DEFAULT: "var(--destructive)",
+                            foreground: "var(--destructive-foreground)",
+                        },
+                        border: "var(--border)",
+                        input: "var(--input)",
+                        ring: "var(--ring)",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "system-ui", "sans-serif"],
+                    }
+                },
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --background: hsl(210 40% 98%);
+            --foreground: hsl(222 47% 11%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(222 47% 11%);
+            --popover: hsl(0 0% 100%);
+            --popover-foreground: hsl(222 47% 11%);
+            --primary: hsl(200 98% 39%);
+            --primary-foreground: hsl(0 0% 100%);
+            --secondary: hsl(210 40% 96%);
+            --secondary-foreground: hsl(222 47% 11%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(215 16% 47%);
+            --accent: hsl(159 75% 35%);
+            --accent-foreground: hsl(0 0% 100%);
+            --destructive: hsl(0 84% 60%);
+            --destructive-foreground: hsl(0 0% 100%);
+            --border: hsl(214 32% 91%);
+            --input: hsl(214 32% 91%);
+            --ring: hsl(200 98% 39%);
+            --radius: 8px;
+        }
+
+        .dark {
+            --background: hsl(222 84% 5%);
+            --foreground: hsl(213 31% 91%);
+            --card: hsl(222 84% 5%);
+            --card-foreground: hsl(213 31% 91%);
+            --popover: hsl(222 84% 5%);
+            --popover-foreground: hsl(213 31% 91%);
+            --primary: hsl(200 98% 50%);
+            --primary-foreground: hsl(222 84% 5%);
+            --secondary: hsl(217 33% 17%);
+            --secondary-foreground: hsl(213 31% 91%);
+            --muted: hsl(217 33% 17%);
+            --muted-foreground: hsl(215 20% 65%);
+            --accent: hsl(159 75% 40%);
+            --accent-foreground: hsl(222 84% 5%);
+            --destructive: hsl(0 62% 30%);
+            --destructive-foreground: hsl(213 31% 91%);
+            --border: hsl(217 33% 17%);
+            --input: hsl(217 33% 17%);
+            --ring: hsl(200 98% 50%);
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="sticky top-0 z-50 glass-effect border-b border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-flask text-primary text-2xl"></i>
+                    <div>
+                        <h1 class="text-xl font-bold text-primary">MediLab Pro</h1>
+                        <p class="text-xs text-muted-foreground">Advanced Diagnostics</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-foreground hover:text-primary transition-colors">Home</a>
+                    <a href="#services" class="text-foreground hover:text-primary transition-colors">Services</a>
+                    <a href="#booking" class="text-foreground hover:text-primary transition-colors">Book Test</a>
+                    <a href="#reports" class="text-foreground hover:text-primary transition-colors">Reports</a>
+                    <a href="#contact" class="text-foreground hover:text-primary transition-colors">Contact</a>
+                    <button id="adminBtn" class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
+                        Admin
+                    </button>
+                </div>
+
+                <button class="md:hidden text-foreground">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative py-20 bg-gradient-to-br from-primary/5 to-accent/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="animate-fade-in">
+                    <h2 class="text-5xl font-bold text-foreground mb-6">
+                        Advanced Diagnostic
+                        <span class="text-primary">Healthcare</span>
+                    </h2>
+                    <p class="text-xl text-muted-foreground mb-8 leading-relaxed">
+                        State-of-the-art laboratory services with AI-powered diagnostics, 
+                        home sample collection, and instant digital reports. Your health, our priority.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center space-x-2">
+                            <i class="fas fa-calendar-plus"></i>
+                            <span>Book Test Online</span>
+                        </button>
+                        <button class="border border-border text-foreground px-8 py-4 rounded-lg font-semibold hover:bg-muted transition-colors flex items-center justify-center space-x-2">
+                            <i class="fas fa-home"></i>
+                            <span>Home Collection</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Trust Indicators -->
+                    <div class="flex items-center space-x-6 mt-8 pt-8 border-t border-border">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-certificate text-accent"></i>
+                            <span class="text-sm font-medium">NABL Certified</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-shield-alt text-accent"></i>
+                            <span class="text-sm font-medium">ISO 15189</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-user-md text-accent"></i>
+                            <span class="text-sm font-medium">Expert Staff</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <!-- Modern medical laboratory with advanced equipment and clean environment -->
+                    <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Modern medical laboratory" 
+                         class="rounded-2xl shadow-2xl w-full" />
+                    <div class="absolute -bottom-6 -left-6 bg-card p-6 rounded-xl shadow-lg border border-border">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-clock text-accent"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold">24-Hour Reports</p>
+                                <p class="text-sm text-muted-foreground">Fast & Accurate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Overview -->
+    <section id="services" class="py-16 bg-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h3 class="text-4xl font-bold text-foreground mb-4">Our Services</h3>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Comprehensive diagnostic solutions with cutting-edge technology and expert medical professionals
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Pathology Services -->
+                <div class="bg-background p-8 rounded-xl border border-border hover:shadow-lg transition-all group">
+                    <div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                        <i class="fas fa-microscope text-primary text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold mb-4">Pathology Tests</h4>
+                    <p class="text-muted-foreground mb-6">Complete blood work, biochemistry, hematology, and specialized pathology investigations.</p>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Complete Blood Count (CBC)</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Lipid Profile</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Liver Function Tests</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Kidney Function Tests</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Radiology Services -->
+                <div class="bg-background p-8 rounded-xl border border-border hover:shadow-lg transition-all group">
+                    <div class="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+                        <i class="fas fa-x-ray text-accent text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold mb-4">Radiology & Imaging</h4>
+                    <p class="text-muted-foreground mb-6">Advanced imaging services including digital X-rays, ultrasound, and CT scans.</p>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Digital X-Ray</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Ultrasound Scanning</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>CT Scan</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>MRI Scanning</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Health Packages -->
+                <div class="bg-background p-8 rounded-xl border border-border hover:shadow-lg transition-all group">
+                    <div class="w-16 h-16 bg-destructive/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-destructive/20 transition-colors">
+                        <i class="fas fa-heart text-destructive text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold mb-4">Health Packages</h4>
+                    <p class="text-muted-foreground mb-6">Comprehensive health checkup packages for preventive healthcare and early detection.</p>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Full Body Checkup</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Diabetes Screening</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Cardiac Health Package</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-check text-accent text-xs"></i>
+                            <span>Women's Health Package</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Test Booking Section -->
+    <section id="booking" class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-bold text-foreground mb-4">Book Your Test Online</h3>
+                <p class="text-xl text-muted-foreground">Simple, fast, and secure online test booking with home collection option</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Booking Form -->
+                <div class="bg-card p-8 rounded-xl border border-border">
+                    <h4 class="text-2xl font-semibold mb-6">Book Appointment</h4>
+                    
+                    <form class="space-y-6">
+                        <!-- Patient Information -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Full Name</label>
+                                <input type="text" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="Enter your full name" data-mock="true">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Phone Number</label>
+                                <input type="tel" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="+91 9876543210" data-mock="true">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email Address</label>
+                            <input type="email" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="your.email@example.com" data-mock="true">
+                        </div>
+
+                        <!-- Test Selection -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Select Test/Package</label>
+                            <select class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" data-mock="true">
+                                <option>Complete Blood Count (CBC) - ₹450</option>
+                                <option>Lipid Profile - ₹650</option>
+                                <option>Liver Function Test - ₹750</option>
+                                <option>Full Body Checkup - ₹2,499</option>
+                                <option>Diabetes Package - ₹899</option>
+                                <option>Thyroid Profile - ₹550</option>
+                            </select>
+                        </div>
+
+                        <!-- Date and Time -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Preferred Date</label>
+                                <input type="date" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" data-mock="true">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Preferred Time</label>
+                                <select class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" data-mock="true">
+                                    <option>09:00 AM - 10:00 AM</option>
+                                    <option>10:00 AM - 11:00 AM</option>
+                                    <option>11:00 AM - 12:00 PM</option>
+                                    <option>02:00 PM - 03:00 PM</option>
+                                    <option>03:00 PM - 04:00 PM</option>
+                                    <option>04:00 PM - 05:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Collection Method -->
+                        <div>
+                            <label class="block text-sm font-medium mb-3">Collection Method</label>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <label class="flex items-center p-4 border border-input rounded-lg cursor-pointer hover:bg-muted/50">
+                                    <input type="radio" name="collection" value="home" class="mr-3 text-primary" data-mock="true">
+                                    <div>
+                                        <p class="font-medium">Home Collection</p>
+                                        <p class="text-sm text-muted-foreground">Free for orders above ₹500</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center p-4 border border-input rounded-lg cursor-pointer hover:bg-muted/50">
+                                    <input type="radio" name="collection" value="lab" class="mr-3 text-primary" data-mock="true">
+                                    <div>
+                                        <p class="font-medium">Visit Lab</p>
+                                        <p class="text-sm text-muted-foreground">Walk-in or appointment</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Address (for home collection) -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Address (for home collection)</label>
+                            <textarea class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" rows="3" placeholder="Enter your complete address" data-mock="true"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full bg-primary text-primary-foreground py-4 rounded-lg font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center space-x-2">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Book Appointment</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Booking Info & Popular Tests -->
+                <div class="space-y-8">
+                    <!-- Popular Tests -->
+                    <div class="bg-card p-6 rounded-xl border border-border">
+                        <h4 class="text-xl font-semibold mb-4">Popular Tests</h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-4 bg-background rounded-lg">
+                                <div>
+                                    <p class="font-medium">Complete Blood Count (CBC)</p>
+                                    <p class="text-sm text-muted-foreground">Basic blood analysis</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-semibold text-primary">₹450</p>
+                                    <p class="text-sm text-muted-foreground">24 hrs</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center p-4 bg-background rounded-lg">
+                                <div>
+                                    <p class="font-medium">Full Body Checkup</p>
+                                    <p class="text-sm text-muted-foreground">Comprehensive health package</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-semibold text-primary">₹2,499</p>
+                                    <p class="text-sm text-muted-foreground">48 hrs</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center p-4 bg-background rounded-lg">
+                                <div>
+                                    <p class="font-medium">Diabetes Package</p>
+                                    <p class="text-sm text-muted-foreground">HbA1c, Glucose, Insulin</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-semibold text-primary">₹899</p>
+                                    <p class="text-sm text-muted-foreground">24 hrs</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Why Choose Us -->
+                    <div class="bg-card p-6 rounded-xl border border-border">
+                        <h4 class="text-xl font-semibold mb-4">Why Choose MediLab Pro?</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-shield-alt text-accent"></i>
+                                <span>NABL & ISO certified laboratory</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-clock text-accent"></i>
+                                <span>Fast & accurate reports</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-home text-accent"></i>
+                                <span>Free home sample collection</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-mobile-alt text-accent"></i>
+                                <span>Digital reports on mobile</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-video text-accent"></i>
+                                <span>Doctor consultation available</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reports Section -->
+    <section id="reports" class="py-16 bg-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-bold text-foreground mb-4">Download Your Reports</h3>
+                <p class="text-xl text-muted-foreground">Secure access to your diagnostic reports anytime, anywhere</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Report Access Form -->
+                <div class="bg-background p-8 rounded-xl border border-border">
+                    <h4 class="text-2xl font-semibold mb-6">Access Your Reports</h4>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Patient ID / Reference Number</label>
+                            <input type="text" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="Enter your patient ID" data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Mobile Number</label>
+                            <input type="tel" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="+91 9876543210" data-mock="true">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Date of Birth</label>
+                            <input type="date" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" data-mock="true">
+                        </div>
+
+                        <button class="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center space-x-2">
+                            <i class="fas fa-search"></i>
+                            <span>Find My Reports</span>
+                        </button>
+
+                        <div class="text-center pt-4">
+                            <p class="text-sm text-muted-foreground">Reports will be sent via SMS & Email when ready</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Features -->
+                <div class="space-y-6">
+                    <!-- Feature showcase image of healthcare professional reviewing digital reports -->
+                    <img src="https://pixabay.com/get/g3db804e45f2e8ce5dc148a3a6471abb90e35f1dfe61e19551b6452d1ce0153bb592b3860b5302553cfe7f62aeb2f1ac10de5f8c92063cf28a986359acc9b3830_1280.jpg" 
+                         alt="Healthcare professional reviewing digital reports" 
+                         class="rounded-xl shadow-lg w-full" />
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-card p-6 rounded-lg border border-border">
+                            <i class="fas fa-download text-primary text-2xl mb-3"></i>
+                            <h5 class="font-semibold mb-2">Instant Download</h5>
+                            <p class="text-sm text-muted-foreground">Download reports instantly in PDF format</p>
+                        </div>
+                        <div class="bg-card p-6 rounded-lg border border-border">
+                            <i class="fas fa-lock text-accent text-2xl mb-3"></i>
+                            <h5 class="font-semibold mb-2">Secure Access</h5>
+                            <p class="text-sm text-muted-foreground">OTP-based secure report access</p>
+                        </div>
+                        <div class="bg-card p-6 rounded-lg border border-border">
+                            <i class="fas fa-bell text-destructive text-2xl mb-3"></i>
+                            <h5 class="font-semibold mb-2">Notifications</h5>
+                            <p class="text-sm text-muted-foreground">SMS & Email alerts when ready</p>
+                        </div>
+                        <div class="bg-card p-6 rounded-lg border border-border">
+                            <i class="fas fa-video text-primary text-2xl mb-3"></i>
+                            <h5 class="font-semibold mb-2">Consultation</h5>
+                            <p class="text-sm text-muted-foreground">Video consultation with doctors</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Accreditations -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-foreground mb-4">Accreditations & Certifications</h3>
+                <p class="text-xl text-muted-foreground">Trusted by healthcare professionals and patients nationwide</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-8 items-center">
+                <div class="text-center group">
+                    <div class="w-24 h-24 bg-card rounded-full flex items-center justify-center mx-auto mb-4 border border-border group-hover:shadow-lg transition-all">
+                        <i class="fas fa-certificate text-3xl text-accent"></i>
+                    </div>
+                    <h4 class="font-semibold mb-2">NABL Certified</h4>
+                    <p class="text-sm text-muted-foreground">National Accreditation Board for Testing</p>
+                </div>
+
+                <div class="text-center group">
+                    <div class="w-24 h-24 bg-card rounded-full flex items-center justify-center mx-auto mb-4 border border-border group-hover:shadow-lg transition-all">
+                        <i class="fas fa-award text-3xl text-primary"></i>
+                    </div>
+                    <h4 class="font-semibold mb-2">ISO 15189</h4>
+                    <p class="text-sm text-muted-foreground">Medical Laboratory Quality Standards</p>
+                </div>
+
+                <div class="text-center group">
+                    <div class="w-24 h-24 bg-card rounded-full flex items-center justify-center mx-auto mb-4 border border-border group-hover:shadow-lg transition-all">
+                        <i class="fas fa-shield-alt text-3xl text-destructive"></i>
+                    </div>
+                    <h4 class="font-semibold mb-2">CAP Accredited</h4>
+                    <p class="text-sm text-muted-foreground">College of American Pathologists</p>
+                </div>
+
+                <div class="text-center group">
+                    <div class="w-24 h-24 bg-card rounded-full flex items-center justify-center mx-auto mb-4 border border-border group-hover:shadow-lg transition-all">
+                        <i class="fas fa-star text-3xl text-accent"></i>
+                    </div>
+                    <h4 class="font-semibold mb-2">5-Star Rating</h4>
+                    <p class="text-sm text-muted-foreground">Customer Satisfaction Score</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-card">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-bold text-foreground mb-4">Contact Us</h3>
+                <p class="text-xl text-muted-foreground">Get in touch with our healthcare experts</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Contact Information -->
+                <div class="space-y-8">
+                    <div class="bg-background p-6 rounded-xl border border-border">
+                        <h4 class="text-xl font-semibold mb-6">Get In Touch</h4>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Laboratory Address</p>
+                                    <p class="text-muted-foreground">123 Medical Complex, Health Street, Mumbai - 400001</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-phone text-accent"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Phone Number</p>
+                                    <p class="text-muted-foreground">+91 9876-543-210</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-destructive/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-envelope text-destructive"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Email Address</p>
+                                    <p class="text-muted-foreground">info@medilabpro.com</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-clock text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Working Hours</p>
+                                    <p class="text-muted-foreground">Mon-Sat: 8:00 AM - 8:00 PM<br>Sun: 9:00 AM - 5:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media Links -->
+                    <div class="bg-background p-6 rounded-xl border border-border">
+                        <h4 class="text-xl font-semibold mb-4">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-500 hover:bg-blue-500/20 transition-colors">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center text-pink-500 hover:bg-pink-500/20 transition-colors">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-blue-600/10 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-600/20 transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center text-green-500 hover:bg-green-500/20 transition-colors">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="bg-background p-8 rounded-xl border border-border">
+                    <h4 class="text-2xl font-semibold mb-6">Send us a Message</h4>
+                    
+                    <form class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Full Name</label>
+                                <input type="text" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="Your full name" data-mock="true">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Phone Number</label>
+                                <input type="tel" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="+91 9876543210" data-mock="true">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email Address</label>
+                            <input type="email" class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" placeholder="your.email@example.com" data-mock="true">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Subject</label>
+                            <select class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" data-mock="true">
+                                <option>General Inquiry</option>
+                                <option>Test Booking</option>
+                                <option>Report Issue</option>
+                                <option>Home Collection</option>
+                                <option>Corporate Package</option>
+                                <option>Feedback</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Message</label>
+                            <textarea class="w-full p-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent" rows="4" placeholder="Tell us how we can help you..." data-mock="true"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center space-x-2">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Send Message</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Google Maps Integration -->
+            <div class="mt-12">
+                <div class="bg-background p-6 rounded-xl border border-border">
+                    <h4 class="text-xl font-semibold mb-4">Find Us on Map</h4>
+                    <div class="h-64 bg-muted rounded-lg flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-map text-4xl text-muted-foreground mb-4"></i>
+                            <p class="text-muted-foreground"><!-- Google Maps integration will be implemented here --></p>
+                            <p class="text-sm text-muted-foreground mt-2">Interactive map showing laboratory location and directions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Dashboard Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-card p-8 rounded-xl border border-border max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-foreground">Admin Dashboard</h3>
+                <button id="closeAdmin" class="text-muted-foreground hover:text-foreground">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Admin Navigation -->
+            <div class="flex space-x-4 mb-6 overflow-x-auto">
+                <button class="admin-tab active px-4 py-2 rounded-lg bg-primary text-primary-foreground" data-tab="bookings">
+                    <i class="fas fa-calendar-alt mr-2"></i>Bookings
+                </button>
+                <button class="admin-tab px-4 py-2 rounded-lg bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground" data-tab="reports">
+                    <i class="fas fa-file-alt mr-2"></i>Reports
+                </button>
+                <button class="admin-tab px-4 py-2 rounded-lg bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground" data-tab="tests">
+                    <i class="fas fa-vial mr-2"></i>Tests
+                </button>
+                <button class="admin-tab px-4 py-2 rounded-lg bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground" data-tab="patients">
+                    <i class="fas fa-users mr-2"></i>Patients
+                </button>
+            </div>
+
+            <!-- Bookings Tab -->
+            <div id="bookings-tab" class="admin-content">
+                <div class="grid lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-background p-4 rounded-lg border border-border">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-2xl font-bold text-primary">24</p>
+                                <p class="text-sm text-muted-foreground">Today's Bookings</p>
+                            </div>
+                            <i class="fas fa-calendar-day text-primary text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-background p-4 rounded-lg border border-border">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-2xl font-bold text-accent">8</p>
+                                <p class="text-sm text-muted-foreground">Home Collections</p>
+                            </div>
+                            <i class="fas fa-home text-accent text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-background p-4 rounded-lg border border-border">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-2xl font-bold text-destructive">3</p>
+                                <p class="text-sm text-muted-foreground">Pending Reports</p>
+                            </div>
+                            <i class="fas fa-clock text-destructive text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-background p-4 rounded-lg border border-border">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-2xl font-bold text-primary">₹45,230</p>
+                                <p class="text-sm text-muted-foreground">Today's Revenue</p>
+                            </div>
+                            <i class="fas fa-rupee-sign text-primary text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Bookings Table -->
+                <div class="bg-background rounded-lg border border-border overflow-hidden">
+                    <div class="p-4 border-b border-border">
+                        <h4 class="font-semibold">Recent Bookings</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-muted">
+                                <tr>
+                                    <th class="text-left p-3 text-sm font-medium">Patient</th>
+                                    <th class="text-left p-3 text-sm font-medium">Test</th>
+                                    <th class="text-left p-3 text-sm font-medium">Date</th>
+                                    <th class="text-left p-3 text-sm font-medium">Collection</th>
+                                    <th class="text-left p-3 text-sm font-medium">Status</th>
+                                    <th class="text-left p-3 text-sm font-medium">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-border" data-mock="true">
+                                    <td class="p-3">
+                                        <div>
+                                            <p class="font-medium">John Doe</p>
+                                            <p class="text-sm text-muted-foreground">+91 9876543210</p>
+                                        </div>
+                                    </td>
+                                    <td class="p-3">Complete Blood Count</td>
+                                    <td class="p-3">2024-01-15, 10:00 AM</td>
+                                    <td class="p-3">
+                                        <span class="bg-accent/10 text-accent px-2 py-1 rounded text-sm">Home</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <span class="bg-primary/10 text-primary px-2 py-1 rounded text-sm">Confirmed</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <button class="text-primary hover:text-primary/80">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-border" data-mock="true">
+                                    <td class="p-3">
+                                        <div>
+                                            <p class="font-medium">Sarah Wilson</p>
+                                            <p class="text-sm text-muted-foreground">+91 9876543211</p>
+                                        </div>
+                                    </td>
+                                    <td class="p-3">Lipid Profile</td>
+                                    <td class="p-3">2024-01-15, 2:00 PM</td>
+                                    <td class="p-3">
+                                        <span class="bg-muted/10 text-muted-foreground px-2 py-1 rounded text-sm">Lab Visit</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <span class="bg-destructive/10 text-destructive px-2 py-1 rounded text-sm">Pending</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <button class="text-primary hover:text-primary/80">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="admin-content hidden">
+                <div class="bg-background rounded-lg border border-border p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-semibold">Report Management</h4>
+                        <button class="bg-primary text-primary-foreground px-4 py-2 rounded-lg">
+                            <i class="fas fa-upload mr-2"></i>Upload Report
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 border border-border rounded-lg" data-mock="true">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-file-pdf text-destructive text-xl"></i>
+                                <div>
+                                    <p class="font-medium">John_Doe_CBC_Report.pdf</p>
+                                    <p class="text-sm text-muted-foreground">Uploaded: 2024-01-14, 3:30 PM</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-accent/10 text-accent px-2 py-1 rounded text-sm">Ready</span>
+                                <button class="text-primary hover:text-primary/80">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 border border-border rounded-lg" data-mock="true">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-file-pdf text-destructive text-xl"></i>
+                                <div>
+                                    <p class="font-medium">Sarah_Wilson_Lipid_Report.pdf</p>
+                                    <p class="text-sm text-muted-foreground">Processing...</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-primary/10 text-primary px-2 py-1 rounded text-sm">Processing</span>
+                                <button class="text-muted-foreground">
+                                    <i class="fas fa-clock"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tests Tab -->
+            <div id="tests-tab" class="admin-content hidden">
+                <div class="bg-background rounded-lg border border-border p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-semibold">Test Management</h4>
+                        <button class="bg-primary text-primary-foreground px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>Add New Test
+                        </button>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="p-4 border border-border rounded-lg" data-mock="true">
+                            <div class="flex justify-between items-start mb-3">
+                                <h5 class="font-medium">Complete Blood Count</h5>
+                                <button class="text-muted-foreground hover:text-foreground">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <p class="text-sm text-muted-foreground mb-2">Basic blood analysis</p>
+                            <p class="font-semibold text-primary">₹450</p>
+                            <p class="text-sm text-muted-foreground">Report time: 24 hours</p>
+                        </div>
+                        
+                        <div class="p-4 border border-border rounded-lg" data-mock="true">
+                            <div class="flex justify-between items-start mb-3">
+                                <h5 class="font-medium">Lipid Profile</h5>
+                                <button class="text-muted-foreground hover:text-foreground">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <p class="text-sm text-muted-foreground mb-2">Cholesterol screening</p>
+                            <p class="font-semibold text-primary">₹650</p>
+                            <p class="text-sm text-muted-foreground">Report time: 24 hours</p>
+                        </div>
+                        
+                        <div class="p-4 border border-border rounded-lg" data-mock="true">
+                            <div class="flex justify-between items-start mb-3">
+                                <h5 class="font-medium">Full Body Checkup</h5>
+                                <button class="text-muted-foreground hover:text-foreground">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                            <p class="text-sm text-muted-foreground mb-2">Comprehensive package</p>
+                            <p class="font-semibold text-primary">₹2,499</p>
+                            <p class="text-sm text-muted-foreground">Report time: 48 hours</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients Tab -->
+            <div id="patients-tab" class="admin-content hidden">
+                <div class="bg-background rounded-lg border border-border p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-semibold">Patient Database</h4>
+                        <div class="flex space-x-2">
+                            <input type="text" placeholder="Search patients..." class="px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring">
+                            <button class="bg-primary text-primary-foreground px-4 py-2 rounded-lg">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 border border-border rounded-lg" data-mock="true">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">John Doe</p>
+                                    <p class="text-sm text-muted-foreground">john.doe@email.com | +91 9876543210</p>
+                                    <p class="text-sm text-muted-foreground">Last visit: 2024-01-10</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-accent/10 text-accent px-2 py-1 rounded text-sm">3 Tests</span>
+                                <button class="text-primary hover:text-primary/80">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 border border-border rounded-lg" data-mock="true">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-accent"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Sarah Wilson</p>
+                                    <p class="text-sm text-muted-foreground">sarah.wilson@email.com | +91 9876543211</p>
+                                    <p class="text-sm text-muted-foreground">Last visit: 2024-01-12</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-primary/10 text-primary px-2 py-1 rounded text-sm">1 Test</span>
+                                <button class="text-primary hover:text-primary/80">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-foreground text-background py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fas fa-flask text-primary text-2xl"></i>
+                        <div>
+                            <h4 class="text-xl font-bold text-primary">MediLab Pro</h4>
+                            <p class="text-sm text-background/70">Advanced Diagnostics</p>
+                        </div>
+                    </div>
+                    <p class="text-background/70 mb-4">Leading diagnostic laboratory providing accurate, reliable, and timely medical testing services.</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center text-background hover:bg-primary transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center text-background hover:bg-primary transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center text-background hover:bg-primary transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-lg mb-4">Quick Links</h5>
+                    <ul class="space-y-2 text-background/70">
+                        <li><a href="#" class="hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Our Services</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Health Packages</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Home Collection</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Download Reports</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-lg mb-4">Services</h5>
+                    <ul class="space-y-2 text-background/70">
+                        <li><a href="#" class="hover:text-primary transition-colors">Pathology Tests</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Radiology & Imaging</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Preventive Health</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Corporate Packages</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Doctor Consultation</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="font-semibold text-lg mb-4">Contact Info</h5>
+                    <div class="space-y-3 text-background/70">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-map-marker-alt text-primary"></i>
+                            <span>123 Medical Complex, Health Street, Mumbai - 400001</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-phone text-primary"></i>
+                            <span>+91 9876-543-210</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-envelope text-primary"></i>
+                            <span>info@medilabpro.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-background/20 mt-8 pt-8 text-center text-background/70">
+                <p>&copy; 2024 MediLab Pro. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // TODO: Implement business logic, API calls, and state management
+        
+        (function() {
+            // Admin Modal Functionality
+            const adminBtn = document.getElementById('adminBtn');
+            const adminModal = document.getElementById('adminModal');
+            const closeAdmin = document.getElementById('closeAdmin');
+            const adminTabs = document.querySelectorAll('.admin-tab');
+            const adminContents = document.querySelectorAll('.admin-content');
+
+            adminBtn.addEventListener('click', function() {
+                adminModal.classList.remove('hidden');
+                adminModal.classList.add('flex');
+            });
+
+            closeAdmin.addEventListener('click', function() {
+                adminModal.classList.add('hidden');
+                adminModal.classList.remove('flex');
+            });
+
+            adminModal.addEventListener('click', function(e) {
+                if (e.target === adminModal) {
+                    adminModal.classList.add('hidden');
+                    adminModal.classList.remove('flex');
+                }
+            });
+
+            // Admin Tab Switching
+            adminTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetTab = this.dataset.tab;
+                    
+                    // Remove active class from all tabs
+                    adminTabs.forEach(t => {
+                        t.classList.remove('bg-primary', 'text-primary-foreground');
+                        t.classList.add('bg-muted', 'text-muted-foreground');
+                    });
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('bg-primary', 'text-primary-foreground');
+                    this.classList.remove('bg-muted', 'text-muted-foreground');
+                    
+                    // Hide all content
+                    adminContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    // Show target content
+                    document.getElementById(targetTab + '-tab').classList.remove('hidden');
+                });
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Form validation placeholder
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    // TODO: Implement form validation and submission logic
+                    alert('Form submitted! (This is a demo - actual implementation would process the form data)');
+                });
+            });
+
+            // Loading states for buttons
+            document.querySelectorAll('button[type="submit"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+                    this.disabled = true;
+                    
+                    // Simulate processing time
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                    }, 2000);
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
